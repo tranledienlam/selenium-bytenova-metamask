@@ -27,7 +27,7 @@ class Auto:
         self.auto_metamask = AutoMetamask(node, profile)
 
     def connect_wallet(self):
-        self.node.go_to(f'{URL_PROJECT}?invite_code=Ljdm0oFIR')
+        self.node.new_tab(f'{URL_PROJECT}?invite_code=Ljdm0oFIR')
         is_connected = self.node.ask_ai('Tôi đã kết nối ví chưa? Trả lời bằng 1 từ true hoặc false')
 
         if 'true' in is_connected:
@@ -42,9 +42,10 @@ class Auto:
         actions = [
             (self.node.find_and_click, By.CSS_SELECTOR, '[alt="Connect Wallet"]'),
             (self.node.find_and_click, By.XPATH, '//p[text()="MetaMask"]'),
-            (self.node.switch_tab, f'{EXTENSION_URL}/notification.html'),
-            (self.auto_metamask.click_button_popup, 'button', 'Connect', False),
-            (self.auto_metamask.click_button_popup, 'button', 'Confirm'),
+            (self.node.switch_tab, f'{EXTENSION_URL}', 'url'),
+            (self.node.go_to, f'{EXTENSION_URL}/popup.html', 'get'),
+            (self.node.find_and_click, By.XPATH, '//button[text()="Connect"]', False),
+            (self.node.find_and_click, By.XPATH, '//button[text()="Confirm"]'),
             (self.node.switch_tab, f'{URL_PROJECT}'),
             (self.node.find, By.CSS_SELECTOR, '[alt="score"]'),
         ]
@@ -53,6 +54,8 @@ class Auto:
             self.node.log(f'Connect ví thành công')
             return True
         else:
+            self.node.check_window_handles()
+            input('enter')
             self.node.snapshot("connect_wallet thất bại")
             return False
         
@@ -62,8 +65,9 @@ class Auto:
         self.node.scroll_to(button)
         if button.is_enabled():
             self.node.find_and_click(By.XPATH, '//button[text()="Check-In"]')
-            self.node.switch_tab(f'{EXTENSION_URL}/notification.html')
-            if not self.auto_metamask.click_button_popup('button', 'Confirm'):
+            self.node.switch_tab(f'{EXTENSION_URL}')
+            self.node.go_to(f'{EXTENSION_URL}/popup.html', 'get')
+            if not self.node.find_and_click(By.XPATH, '//button[text()="Confirm"]'):
                 self.node.snapshot(f'Có thể không đủ fee gas BNB')
             self.node.switch_tab(f'{URL_PROJECT}')
             self.node.reload_tab()
@@ -76,7 +80,6 @@ class Auto:
             self.node.snapshot(f'Đã check-in {days[-1].text}')
         else:
             self.node.snapshot('Check-in thất bại')
-        
     def _run(self):
         self.auto_metamask._run()
         if not self.auto_metamask.change_network(network_name='Binance Smart Chain',

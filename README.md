@@ -40,7 +40,7 @@
 
 <p align="center">
     <a href="https://youtu.be/HtK0wRuakdM">
-        <img src="https://img.youtube.com/vi/HtK0wRuakdM/maxresdefault.jpg" alt="Xem video demo">
+        <img src="https://i9.ytimg.com/vi_webp/HtK0wRuakdM/mq2.webp?sqp=CKCMgsAG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE0gYShlMA8=&rs=AOn4CLBgqq8Dr9Tbt7XQeCq4nvhEbLa6ZQ" alt="Xem video demo">
     </a>
 </p>
 
